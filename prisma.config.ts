@@ -13,4 +13,8 @@ export default defineConfig({
     // @ts-ignore: Prisma v7 config type workaround
     directUrl: process.env.DIRECT_URL,
   },
+  migrate: {
+    url: process.env.DATABASE_URL,
+    directUrl: process.env.DIRECT_URL,
+  },
 });

@@ -5,7 +5,7 @@ generator client {
 // url 항목을 삭제합니다.
 datasource db {
   provider  = "postgresql"
-  
+
 }
 
 model Layer {

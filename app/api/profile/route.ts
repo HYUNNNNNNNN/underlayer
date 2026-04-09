@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import { Pool } from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
+import { getServerSession } from "next-auth";
 
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 
