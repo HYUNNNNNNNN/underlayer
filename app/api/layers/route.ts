@@ -1,13 +1,21 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic'; // 💡 아까 고생해서 걸어둔 방어막입니다! 절대 지우지 마세요!
 
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
+import { Pool } from 'pg';
+import { PrismaPg } from '@prisma/adapter-pg';
 
-// 💡 [수정] SQLite 어댑터와 관련된 모든 코드를 삭제하고 표준 방식으로 초기화합니다.
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 
-// Prisma v7은 어댑터 설정 없이 그냥 생성해도 환경 변수를 자동으로 참조합니다.
-const prisma = globalForPrisma.prisma || new PrismaClient();
+let prisma: PrismaClient;
+if (globalForPrisma.prisma) {
+  prisma = globalForPrisma.prisma;
+} else {
+  // 💡 Prisma 7 전용 PostgreSQL 어댑터 장착
+  const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+  const adapter = new PrismaPg(pool);
+  prisma = new PrismaClient({ adapter });
+}
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 

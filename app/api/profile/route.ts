@@ -1,13 +1,22 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic'; // 💡 아까 고생해서 걸어둔 방어막입니다! 절대 지우지 마세요!
 
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '../auth/[...nextauth]/route';
+import { Pool } from 'pg';
+import { PrismaPg } from '@prisma/adapter-pg';
 
-// 💡 SQLite 어댑터 코드를 싹 지우고 기본 Prisma 설정으로 되돌립니다.
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
-const prisma = globalForPrisma.prisma || new PrismaClient();
+
+let prisma: PrismaClient;
+if (globalForPrisma.prisma) {
+  prisma = globalForPrisma.prisma;
+} else {
+  // 💡 Prisma 7 전용 PostgreSQL 어댑터 장착
+  const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+  const adapter = new PrismaPg(pool);
+  prisma = new PrismaClient({ adapter });
+}
+
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
 // 1. 기존 GET 함수 (그대로 유지 - 닉네임 불러오기)
