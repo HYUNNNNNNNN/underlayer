@@ -1,5 +1,5 @@
-export const dynamic = 'force-dynamic';
 "use client";
+
 
 import { useState } from "react";
 import QuickSketch from "./components/QuickSketch";
