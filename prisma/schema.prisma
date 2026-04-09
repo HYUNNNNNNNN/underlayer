@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+// url 항목을 삭제합니다.
+datasource db {
+  provider  = "postgresql"
+  
+}
+
+model Layer {
+  id        String   @id @default(cuid())
+  category  String   @default("개발/기술")
+  context   String
+  action    String
+  lesson    String
+  respectCount Int @default(0)
+
+  authorName   String    @default("익명의 도전자") 
+  authorEmail  String?   // 이메일은 없을 수도 있으니 ?(선택) 표시
+
+  createdAt DateTime @default(now())
+
+  imageUrl     String? // 이미지
+  linkedLayerIds String?
+
+  comments     Comment[]
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  text      String   // 댓글 내용
+  layerId   String   // 어떤 밑그림에 달린 댓글인지 기억하는 ID
+  authorName  String   @default("익명의 도전자")
+  authorEmail String? 
+  layer     Layer    @relation(fields: [layerId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model UserProfile {
+  email    String @id     // 이메일을 고유한 열쇠(ID)로 사용합니다
+  nickname String
+  image String?
+}

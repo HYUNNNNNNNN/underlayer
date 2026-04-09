@@ -34,3 +34,8 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+app 폴더 안에 components 폴더 만듬 -> 이곳에 tsx 페이지 파일들 생성 예정
+app 폴더 안에 api/layers 폴더 생성 -> 이곳에 ts 파일들 생성 예정
+
+page.tsx에 다른 txs 파일들을 import하여 화면에 보이도록 함.

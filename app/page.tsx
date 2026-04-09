@@ -1,65 +1,99 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+import QuickSketch from "./components/QuickSketch";
+import MyCanvas from "./components/MyCanvas";     
+import StudioFeed from "./components/StudioFeed"; 
+import AuthButton from "./components/AuthButton";
+import MyProfile from "./components/MyProfile"; 
+import UserCanvas from "./components/UserCanvas"; // 💡 새로 만들 컴포넌트를 불러옵니다!
 
 export default function Home() {
+  const [activeTab, setActiveTab] = useState("studio");
+  const [targetUserEmail, setTargetUserEmail] = useState<string | null>(null);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="min-h-screen bg-gray-50 flex flex-col items-center p-4 md:p-8 pb-20 relative">
+      
+      <div className="absolute top-4 right-4 md:top-8 md:right-8 z-10">
+        <AuthButton />
+      </div>
+
+      <div className="w-full max-w-4xl pt-8">
+        
+        <div className="text-center mb-8 pt-8">
+          <h1 className="text-4xl font-extrabold tracking-tight mb-2">Underlayer</h1>
+          <p className="text-gray-500">성공 아래 숨겨진 '실패의 레이어'를 기록하다</p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+
+        {/* 💡 [모바일 최적화] 모바일에서는 하단 바, PC에서는 상단 탭으로 자동 변신합니다! */}
+        <div className="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md border-t border-gray-200 p-3 z-[100] flex justify-around md:relative md:bg-transparent md:border-none md:p-0 md:justify-center md:gap-4 md:mb-10 pb-safe">
+          <button
+            onClick={() => setActiveTab("write")}
+            className={`flex flex-col md:flex-row items-center gap-1 md:px-5 md:py-2.5 rounded-2xl md:rounded-full text-[10px] md:text-sm font-bold transition-all ${
+              activeTab === "write" 
+                ? "text-black md:bg-black md:text-white md:shadow-md scale-110 md:scale-100" 
+                : "text-gray-400 md:bg-white md:text-gray-500 md:border border-gray-200 hover:bg-gray-100"
+            }`}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            <span className="text-xl md:text-base">✍️</span>
+            <span>작업실</span>
+          </button>
+          <button
+            onClick={() => setActiveTab("mine")}
+            className={`flex flex-col md:flex-row items-center gap-1 md:px-5 md:py-2.5 rounded-2xl md:rounded-full text-[10px] md:text-sm font-bold transition-all ${
+              activeTab === "mine" 
+                ? "text-black md:bg-black md:text-white md:shadow-md scale-110 md:scale-100" 
+                : "text-gray-400 md:bg-white md:text-gray-500 md:border border-gray-200 hover:bg-gray-100"
+            }`}
           >
-            Documentation
-          </a>
+            <span className="text-xl md:text-base">🎨</span>
+            <span>내 캔버스</span>
+          </button>
+          <button
+            onClick={() => setActiveTab("studio")}
+            className={`flex flex-col md:flex-row items-center gap-1 md:px-5 md:py-2.5 rounded-2xl md:rounded-full text-[10px] md:text-sm font-bold transition-all ${
+              activeTab === "studio" || activeTab === "userCanvas"
+                ? "text-black md:bg-black md:text-white md:shadow-md scale-110 md:scale-100" 
+                : "text-gray-400 md:bg-white md:text-gray-500 md:border border-gray-200 hover:bg-gray-100"
+            }`}
+          >
+            <span className="text-xl md:text-base">🌍</span>
+            <span>스튜디오</span>
+          </button>
+          <button
+            onClick={() => setActiveTab("profile")}
+            className={`flex flex-col md:flex-row items-center gap-1 md:px-5 md:py-2.5 rounded-2xl md:rounded-full text-[10px] md:text-sm font-bold transition-all ${
+              activeTab === "profile" 
+                ? "text-black md:bg-black md:text-white md:shadow-md scale-110 md:scale-100" 
+                : "text-gray-400 md:bg-white md:text-gray-500 md:border border-gray-200 hover:bg-gray-100"
+            }`}
+          >
+            <span className="text-xl md:text-base">👤</span>
+            <span>프로필</span>
+          </button>
         </div>
-      </main>
-    </div>
+
+        {activeTab === "write" && <QuickSketch />}
+        {activeTab === "mine" && <MyCanvas />}
+        {activeTab === "studio" && (
+          <StudioFeed 
+            onGoToWrite={() => setActiveTab("write")} 
+            onViewUser={(email) => {
+              setTargetUserEmail(email);
+              setActiveTab("userCanvas");
+            }}
+          />
+        )}
+        {activeTab === "userCanvas" && targetUserEmail && (
+          <UserCanvas 
+            email={targetUserEmail} 
+            onBack={() => setActiveTab("studio")} 
+          />
+        )}
+        {activeTab === "profile" && <MyProfile />} 
+
+      </div>
+    </main>
   );
 }
